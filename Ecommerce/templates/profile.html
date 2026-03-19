@@ -1,0 +1,17 @@
+{% extends "usermain.html" %}
+{% block title %}Profile{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="mb-3">My Profile</h2>
+        <p><strong>Username:</strong> {{ user_data.username }}</p>
+        <p><strong>Email:</strong> {{ user_data.email }}</p>
+        <p><strong>Mobile:</strong> {{ user_data.mobile_number }}</p>
+        <p><strong>Address:</strong> {{ user_data.address }}</p>
+        {% if user_data.profile_image %}
+        <img src="{{ user_data.profile_image.url }}" alt="Profile image" class="img-thumbnail" style="max-width: 220px;">
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

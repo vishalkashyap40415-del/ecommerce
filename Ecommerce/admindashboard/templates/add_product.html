@@ -1,0 +1,43 @@
+{% extends "admin_main.html" %}
+{% block title %}Add Product{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+    <div class="col-lg-5">
+        <div class="card shadow-sm">
+            <div class="card-body">
+                <h1 class="h3 mb-3">Add Product</h1>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="pname" class="form-label">Product Name</label>
+                        <input type="text" id="pname" name="pname" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pprice" class="form-label">Price</label>
+                        <input type="text" id="pprice" name="pprice" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="ptype" class="form-label">Type</label>
+                        <input type="text" id="ptype" name="ptype" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pdescription" class="form-label">Description</label>
+                        <textarea id="pdescription" name="pdescription" rows="4" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label for="pphoto" class="form-label">Product Photo</label>
+                        <input type="file" id="pphoto" name="pphoto" accept="image/*" class="form-control" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100">Save Product</button>
+                </form>
+                <div class="text-danger mt-3">
+                    {% if success %}
+                        {{ success }}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,148 @@
+{% extends "admin_main.html" %}
+{% block title %}Manage Product{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+
+<div class="container mt-5">
+    <div class="row mt-5">
+        <div class="col-sm-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="mb-4">Manage Products</h2>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-striped" id="product">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Product Id</th>
+                                    <th>Product Name</th>
+                                    <th>Product Type</th>
+                                    <th>Product Price</th>
+                                    <th>Product Image</th>
+                                    <th>Product Description</th>
+                                    <th>Manage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in products %}
+                                <tr>
+                                    <td>{{ item.id }}</td>
+                                    <td>{{ item.pname }}</td>
+                                    <td>{{ item.ptype }}</td>
+                                    <td>{{ item.pprice }}</td>
+                                    <td>
+                                        {% if item.pphoto %}
+                                            <img src="{{ item.pphoto.url }}" width="80" height="80" class="rounded" alt="{{ item.pname }}">
+                                        {% else %}
+                                            No Image
+                                        {% endif %}
+                                    </td>
+                                    <td>{{ item.pdescription }}</td>
+                                    <td>
+                                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#deleteModal{{ item.id }}">
+                                            Delete
+                                        </button>
+                                        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#updateModal{{ item.id }}">
+                                            Update
+                                        </button>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" class="text-center">No products added yet.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% for item in products %}
+<div class="modal fade" id="updateModal{{ item.id }}" tabindex="-1" aria-labelledby="updateModalLabel{{ item.id }}" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="updateModalLabel{{ item.id }}">Update {{ item.pname }}</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'product_update' item.id %}" enctype="multipart/form-data">
+                <div class="modal-body">
+                    {% csrf_token %}
+                    <div class="row g-3">
+                        <div class="col-md-6">
+                            <label for="pname{{ item.id }}" class="form-label">Product Name</label>
+                            <input type="text" id="pname{{ item.id }}" name="pname" class="form-control" value="{{ item.pname }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pprice{{ item.id }}" class="form-label">Product Price</label>
+                            <input type="text" id="pprice{{ item.id }}" name="pprice" class="form-control" value="{{ item.pprice }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="ptype{{ item.id }}" class="form-label">Product Type</label>
+                            <input type="text" id="ptype{{ item.id }}" name="ptype" class="form-control" value="{{ item.ptype }}" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="pphoto{{ item.id }}" class="form-label">Product Image</label>
+                            <input type="file" id="pphoto{{ item.id }}" name="pphoto" class="form-control" accept="image/*">
+                        </div>
+                        <div class="col-12">
+                            <label for="pdescription{{ item.id }}" class="form-label">Product Description</label>
+                            <textarea id="pdescription{{ item.id }}" name="pdescription" rows="4" class="form-control" required>{{ item.pdescription }}</textarea>
+                        </div>
+                        {% if item.pphoto %}
+                        <div class="col-12">
+                            <img src="{{ item.pphoto.url }}" width="90" height="90" class="rounded" alt="{{ item.pname }}">
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary">Update Product</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="deleteModal{{ item.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ item.id }}" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="deleteModalLabel{{ item.id }}">Delete Product</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to delete <strong>{{ item.pname }}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <form method="post" action="{% url 'product_delete' item.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+<script>
+$(document).ready(function () {
+    $('#product').DataTable({
+        pageLength: 5,
+        lengthMenu: [5, 10, 25, 50],
+        pagingType: 'simple_numbers',
+        ordering: true,
+        searching: true
+    });
+});
+</script>
+{% endblock %}

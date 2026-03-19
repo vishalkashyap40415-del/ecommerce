@@ -1,0 +1,73 @@
+{% extends "usermain.html" %}
+{% load static %}
+{% block title %}Order Product{% endblock %}
+
+{% block content %}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <h2 class="text-center mb-4" style="background-color: antiquewhite; color: brown; padding: 15px; border-radius: 10px;">Order Product</h2>
+            <div class="row">
+                <div class="col-md-5">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                        <img src="{{ product.pphoto.url }}" class="card-img-top" alt="{{ product.pname }}" style="border-top-left-radius: 15px; border-top-right-radius: 15px; height: 250px; object-fit: cover;">
+                        <div class="card-body">
+                            <h5 class="card-title text-primary">{{ product.pname }}</h5>
+                            <p class="card-text">{{ product.pdescription }}</p>
+                            <p class="text-muted"><strong>Type:</strong> {{ product.ptype }}</p>
+                            <h6 class="text-success fw-bold">Price: ${{ product.pprice }}</h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-7">
+                    <div class="card shadow-lg border-0" style="border-radius: 15px;">
+                        <div class="card-header bg-primary text-white" style="border-top-left-radius: 15px; border-top-right-radius: 15px;">
+                            <h5 class="mb-0">Shipping & Order Details</h5>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" action="">
+                                {% csrf_token %}
+                                <input type="hidden" name="product_id" value="{{ product.id }}">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="name" class="form-label">Full Name</label>
+                                        <input type="text" id="name" name="name" class="form-control" value="{{ user_data.username }}" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" id="email" name="email" class="form-control" value="{{ user_data.email }}" required>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label for="city" class="form-label">City</label>
+                                        <input type="text" id="city" name="city" class="form-control" placeholder="Enter your city" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label for="pincode" class="form-label">Pincode</label>
+                                        <input type="text" id="pincode" name="pincode" class="form-control" placeholder="Enter pincode" required>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="address" class="form-label">Delivery Address</label>
+                                    <textarea id="address" name="address" class="form-control" rows="3" placeholder="Full delivery address" required>{{ user_data.address }}</textarea>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="quantity" class="form-label">Quantity</label>
+                                    <input type="number" id="quantity" name="quantity" class="form-control" value="1" min="1" required>
+                                </div>
+                                <div class="d-grid gap-2">
+                                    <button type="submit" class="btn btn-success btn-lg">Place Order</button>
+                                    <a href="{% url 'Dashboard' %}" class="btn btn-outline-secondary">Cancel</a>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

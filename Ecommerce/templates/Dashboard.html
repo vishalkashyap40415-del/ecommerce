@@ -1,0 +1,15 @@
+{% extends "usermain.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h1 class="h3">Welcome to Dashboard, {{ name }}</h1>
+        <!-- <p class="mb-1"><strong>Email:</strong> {{ email }}</p>
+        <p class="mb-3"><strong>Username:</strong> {{ user_data.username }}</p>
+        <a href="{% url 'Profile' %}" class="btn btn-primary">View Profile</a>
+        <a href="{% url 'ChangePassword' %}" class="btn btn-outline-secondary">Change Password</a>
+        <a href="{% url 'logout' %}" class="btn btn-danger">Logout</a> -->
+    </div>
+</div>
+{% endblock %}

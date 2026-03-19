@@ -1,0 +1,12 @@
+{% extends "usermain.html" %}
+{% block title %}My Orders{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h2 class="mb-3">My Orders</h2>
+        <p>No orders are available for {{ user_data.username }} yet.</p>
+    </div>
+</div>
+<a href="Products.html">products</a>
+{% endblock %}
