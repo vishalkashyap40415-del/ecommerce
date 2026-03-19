@@ -5,6 +5,7 @@ from admindashboard.models import order, product
 
 
 # Create your views here.
+
 def HOME_Main_Page(request):
     return render(request, 'main.html')
 
@@ -169,33 +170,34 @@ def ChangePassword(request):
 
 
 def buynow(request):
-    if "username" in request.session and "email" in request.session:
-        product_id = request.POST.get('pid')
-        useremail=request.session['email']
-        username=request.session['username']
-        pqnty = request.POST.get('pqnty')
-        data = get_object_or_404(product, id=product_id)
-        total_price = int(data.pprice) * int(pqnty)
-        try:
-            order.objects.create(user=username, email=useremail,
-                                product=data, ptype=data.ptype, pprice=data.pprice,
-                                p_photo=data.pphoto, pdescription=data.pdescription,
-                                quantity=pqnty, total_price=total_price, pname=data.pname)
-        except Exception as e:
-            messages.error(request, f'Error placing order: {str(e)}')
-            return redirect('products')  # assuming a products page
-        return redirect('my_order_list')
+    user = _get_logged_in_user(request)
+    if user is None:
+        messages.error(request, 'Please login first')
+        return redirect('login')
 
+    product_id = request.POST.get('pid')
+    pqnty = request.POST.get('pqnty')
+    data = get_object_or_404(product, id=product_id)
+    total_price = int(data.pprice) * int(pqnty)
+    try:
+        order.objects.create(user=user.username, email=user.email,
+                            product=data, ptype=data.ptype, pprice=data.pprice,
+                            p_photo=data.pphoto, pdescription=data.pdescription,
+                            quantity=pqnty, total_price=total_price, pname=data.pname)
+    except Exception as e:
+        messages.error(request, f'Error placing order: {str(e)}')
+        return redirect('Products')  # assuming a products page
+    return redirect('MyOrders')
 
 
 def my_order_list(request):
-    if "username" in request.session and "email" in request.session:
-        useremail=request.session['email']
-        data = order.objects.filter(email=useremail)
-        return render(request,"myorders.html",{'myorder':data})
-    else:
+    user = _get_logged_in_user(request)
+    if user is None:
         messages.error(request, 'Please login first')
-        return redirect('login.html')
+        return redirect('login')
+
+    data = order.objects.filter(email=user.email)
+    return render(request,"myorders.html",{'myorder':data})
 
 
 

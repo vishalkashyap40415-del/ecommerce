@@ -1,51 +1,251 @@
 {% extends "main.html" %}
-{% block title %}Login{% endblock %}
+{% load static %}
+{% block title %}Login - Ecommerce{% endblock %}
 
 {% block content %}
+<style>
+.login-container {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
 
-<div class="container mt-5">
-    <div class="row justify-content-center mt-5">
+.login-card {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    max-width: 400px;
+    width: 100%;
+}
 
-        <div class="col-sm-6">
+.login-header {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    color: white;
+    padding: 30px 20px;
+    text-align: center;
+}
 
-            <div style="border:1px solid #ddd; padding:30px; border-radius:10px; background:#f9f9f9; box-shadow:0px 0px 10px rgba(0,0,0,0.1);">
+.login-body {
+    padding: 40px 30px;
+}
 
-                <h2 class="text-center text-primary mb-4">C-Panel</h2>
+.form-floating {
+    margin-bottom: 20px;
+}
 
-                <form action="{% url 'login' %}" method="post">
-                    {% csrf_token %}
+.form-control {
+    border: 2px solid #e1e5e9;
+    border-radius: 10px;
+    padding: 12px 15px;
+    font-size: 16px;
+    transition: all 0.3s ease;
+}
 
-                    <div class="mb-3">
-                        <label class="form-label">Email Address</label>
-                        <input type="email" name="email" class="form-control" placeholder="Enter email" required>
-                    </div>
+.form-control:focus {
+    border-color: #4CAF50;
+    box-shadow: 0 0 0 0.2rem rgba(76, 175, 80, 0.25);
+}
 
-                    <div class="mb-3">
-                        <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" placeholder="Enter password" required>
-                    </div>
+.btn-login {
+    background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+    border: none;
+    border-radius: 10px;
+    padding: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    transition: all 0.3s ease;
+    width: 100%;
+}
 
-                    <div class="d-grid">
-                        <button class="btn btn-primary">Login</button>
-                    </div>
+.btn-login:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(76, 175, 80, 0.4);
+}
 
-                    <div class="text-center mt-3">
-                        <a href="{% url 'newuser' %}">Create an Account?</a>
-                    </div>
+.social-login {
+    text-align: center;
+    margin: 20px 0;
+}
 
-                </form>
+.social-btn {
+    border: 2px solid #e1e5e9;
+    background: white;
+    border-radius: 10px;
+    padding: 10px;
+    margin: 5px;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    width: 45px;
+    height: 45px;
+}
 
-                <div class="text-center text-danger mt-3">
-                    {% for message in messages %}
-                        <h6>{{ message }}</h6>
-                    {% endfor %}
-                </div>
+.social-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
 
-            </div>
+.divider {
+    text-align: center;
+    position: relative;
+    margin: 30px 0;
+}
 
+.divider::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #e1e5e9;
+}
+
+.divider span {
+    background: white;
+    padding: 0 15px;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.alert {
+    border-radius: 10px;
+    border: none;
+}
+
+.checkbox-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.forgot-password {
+    color: #4CAF50;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.forgot-password:hover {
+    text-decoration: underline;
+}
+
+.register-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #6c757d;
+}
+
+.register-link a {
+    color: #4CAF50;
+    text-decoration: none;
+    font-weight: 600;
+}
+
+.register-link a:hover {
+    text-decoration: underline;
+}
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <div class="login-header">
+            <h2 class="mb-2">Welcome Back</h2>
+            <p class="mb-0">Sign in to your account</p>
         </div>
 
+        <div class="login-body">
+            <!-- Error Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i>
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form action="{% url 'login' %}" method="post">
+                {% csrf_token %}
+
+                <div class="form-floating">
+                    <input type="email" name="email" class="form-control" id="email" placeholder="name@example.com" required>
+                    <label for="email"><i class="fas fa-envelope me-2"></i>Email Address</label>
+                </div>
+
+                <div class="form-floating">
+                    <input type="password" name="password" class="form-control" id="password" placeholder="Password" required>
+                    <label for="password"><i class="fas fa-lock me-2"></i>Password</label>
+                </div>
+
+                <div class="checkbox-container">
+                    <div class="form-check">
+                        <input class="form-check-input" type="checkbox" id="rememberMe">
+                        <label class="form-check-label" for="rememberMe">
+                            Remember me
+                        </label>
+                    </div>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-login">
+                    <i class="fas fa-sign-in-alt me-2"></i>Sign In
+                </button>
+            </form>
+
+            <div class="divider">
+                <span>or continue with</span>
+            </div>
+
+            <div class="social-login">
+                <a href="#" class="social-btn">
+                    <i class="fab fa-google" style="color: #DB4437;"></i>
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-facebook-f" style="color: #4267B2;"></i>
+                </a>
+                <a href="#" class="social-btn">
+                    <i class="fab fa-twitter" style="color: #1DA1F2;"></i>
+                </a>
+            </div>
+
+            <div class="register-link">
+                Don't have an account?
+                <a href="{% url 'newuser' %}">Create one here</a>
+            </div>
+        </div>
     </div>
 </div>
+
+<script>
+// Add some interactivity
+document.addEventListener('DOMContentLoaded', function() {
+    // Password visibility toggle (optional enhancement)
+    const passwordInput = document.getElementById('password');
+    const passwordLabel = document.querySelector('label[for="password"]');
+
+    // Add focus effects
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-2px)';
+        });
+
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+
+    // Auto-focus first input
+    document.getElementById('email').focus();
+});
+</script>
 
 {% endblock %}

@@ -15,4 +15,5 @@ urlpatterns = [
     path('changepassword/', views.ChangePassword, name='ChangePassword'),
     path('orders/', views.product_orders, name='product_orders'),
     path('buynow/', views.buynow, name='buynow'),
+    path('cancelorder/<int:order_id>/', views.cancel_order, name='cancel_order'),
 ]
